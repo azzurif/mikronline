@@ -7,5 +7,5 @@ def connect(host, port, username, password):
         client.set_missing_host_key_policy(AutoAddPolicy())
         client.connect(host, port, username, password)
         return client
-    except:
-        return None
+    except Exception as e:
+        return e
