@@ -30,8 +30,7 @@ def login():
     submit = right.button("Connect", type="primary", use_container_width=True)
 
     if submit:
-        st.session_state.client = "ada"
-        # st.session_state.client = connect(host, port, username, password)
+        st.session_state.client = connect(host, port, username, password)
         st.session_state.host = host
         st.session_state.username = username
         st.rerun()

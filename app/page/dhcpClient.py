@@ -1,19 +1,31 @@
 import streamlit as st
+import re
 from lib.command import command
 from lib.interfaces import interfaces
 
-data = [
-    {"No.": 1, "Interface": "Ethernet0", "Bound": "192.168.88.1/24"},
-    {"No.": 2, "Interface": "Ethernet1", "Bound": "192.168.88.2/24"},
-    {"No.": 3, "Interface": "Ethernet2", "Bound": "192.168.88.3/24"},
-]
-st.write(st.session_state.connection)
+
+if "show_form" not in st.session_state:
+    st.session_state.show_form = False
+
+dhcp_data_raw = command("/ip dhcp-client print terse")
+dhcp_lines = dhcp_data_raw.strip().split("\n")
+
+data = []
+for idx, line in enumerate(dhcp_lines):
+    iface_match = re.search(r'interface=([\w-]+)', line)  
+    bound_match = re.search(r'address=([\d./]+)', line)  
+
+    if iface_match:
+        interface = iface_match.group(1)
+        bound_address = bound_match.group(1) if bound_match else "Not Bound"
+        data.append({"No.": idx + 1, "Interface": interface, "Bound": bound_address})
+
+st.write(st.session_state.get("connection", "Not Connected"))
 
 left, right = st.columns([6, 1], vertical_alignment="bottom")
 left.header("DHCP Client Lists")
-add = right.button("Add", type="primary", use_container_width=True)
 
-if add:
+if right.button("Add", type="primary", use_container_width=True):
     st.session_state.show_form = True
 
 if st.session_state.show_form:
@@ -25,13 +37,12 @@ if st.session_state.show_form:
     )
 
     _, cancel, submit = st.columns([5, 1, 1])
-    confirm = submit.button("Confirm", type="primary", use_container_width=True)
+    
+    if submit.button("Confirm", type="primary", use_container_width=True):
+        command(f"/ip dhcp-client add interface={interface}")
+        st.session_state.show_form = False
+    
     if cancel.button("Cancel", use_container_width=True):
         st.session_state.show_form = False
-
-        # if confirm:
-        #     command(f"/ip dhcp-client add interface={interface}")
-        # st.session_state.show_form = False
-
 
 st.dataframe(data, hide_index=True)
