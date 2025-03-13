@@ -15,8 +15,8 @@ def command(command, show_success=True):
         if error:
             st.error("❌ Konfigurasi gagal: " + error)
             return None
-        elif show_success:
-            st.success("✅ Konfigurasi berhasil!")
+        # elif show_success:
+        #     st.success("✅ Konfigurasi berhasil!")
 
         return output
 
