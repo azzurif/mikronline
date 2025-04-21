@@ -74,7 +74,6 @@ if st.session_state.client:
                 dhcpClientPage,
                 dhcpServerPage,
                 routesPage,
-                # wirelessPage,
                 firewallPage,
             ],
             "Account": [logoutPage],
