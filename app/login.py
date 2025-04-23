@@ -30,9 +30,9 @@ def login():
     submit = right.button("Connect", type="primary", use_container_width=True)
 
     if submit:
-        st.session_state.client = connect(host, port, username, password)
-        st.session_state.host = host
-        st.session_state.username = username
+        # st.session_state.client = connect(host, port, username, password)
+        # st.session_state.host = host
+        # st.session_state.username = username
         st.rerun()
 
 
@@ -65,22 +65,38 @@ firewallPage = st.Page(
 )
 
 
-if st.session_state.client:
-    pg = st.navigation(
-        {
-            "Configs": [
-                namePage,
-                ipsPage,
-                dhcpClientPage,
-                dhcpServerPage,
-                routesPage,
-                wirelessPage,
-                firewallPage,
-            ],
-            "Account": [logoutPage],
-        }
-    )
-else:
-    pg = st.navigation([loginPage])
+# if st.session_state.client:
+#     pg = st.navigation(
+#         {
+#             "Configs": [
+#                 namePage,
+#                 ipsPage,
+#                 dhcpClientPage,
+#                 dhcpServerPage,
+#                 routesPage,
+#                 wirelessPage,
+#                 firewallPage,
+#             ],
+#             "Account": [logoutPage],
+#         }
+#     )
+#
+# else:
+#     pg = st.navigation([loginPage])
+
+pg = st.navigation(
+    {
+        "Configs": [
+            namePage,
+            ipsPage,
+            dhcpClientPage,
+            dhcpServerPage,
+            routesPage,
+            wirelessPage,
+            firewallPage,
+        ],
+        "Account": [logoutPage],
+    }
+)
 
 pg.run()
